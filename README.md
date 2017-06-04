@@ -1,6 +1,6 @@
 New-ScriptTemplate
 ===================
-My Powershell code template, more details are available here: [Blog Post](http://vaines.org/2017/05/28/powershell-framework/)
+My Powershell code template, more details are available here: [Blog Post](http://vaines.org/powershell-framework/)
 
 ------------------
 
