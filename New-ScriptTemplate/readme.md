@@ -12,20 +12,20 @@ Here is a repository of pre-built script template for PowerShell
 ----------
 How does it work
 ---------
-**More details are available here: [Blog Post](http://vaines.org/2017/05/28/powershell-framework/)**
+**More details are available here: [Blog Post](http://vaines.org/powershell-framework/)**
 
 
-The ìVerb-Driver.ps1î file is the work-horse of the framework, this is the file you run to execute the script or schedule a task to run.
+The ‚ÄúVerb-Driver.ps1‚Äù file is the work-horse of the framework, this is the file you run to execute the script or schedule a task to run.
 
 The driver will set up the script environment by calling functions or initializing things.
 
 Firstly the config file will be loaded. The Config.ps1 file by default contains the log folder, naming structure and file name format, it should also contain any variables which may be used every time the script is run.
 
-This could be done with command line arguments, however if every time I run a script I have to enter a particular argument, thatís a waste of time. If the script runs as a scheduled task, itíll be easier to update the config file than update the scheduled task.
+This could be done with command line arguments, however if every time I run a script I have to enter a particular argument, that‚Äôs a waste of time. If the script runs as a scheduled task, it‚Äôll be easier to update the config file than update the scheduled task.
 
 Secondly the Logging module is loaded and initialised, this will trigger the log folder to be created and a log file to be created. If the folder and log file already exist the log file will be appended.
 
-Next, any other modules should be loaded (in the templateís default state the ìSample-Functions.ps1î).
+Next, any other modules should be loaded (in the template‚Äôs default state the ‚ÄúSample-Functions.ps1‚Äù).
 
 If any of these three sections are to fail for any reason they script will terminate and to avoid causing any potential damage.
 
@@ -35,11 +35,11 @@ The main script block is where the specific code for the project/tasks goes, thi
 
 When writing a main script block use the following structure to write messages to the log file.
 
-    Log-write -logpath $Script:LogPath -linevalue ìA messageî
+    Log-write -logpath $Script:LogPath -linevalue ‚ÄúA message‚Äù
 
-In itís default state these messages will be written out to console as well as the file. This can be altered in the config file by changing the 
+In it‚Äôs default state these messages will be written out to console as well as the file. This can be altered in the config file by changing the 
 
-    $Script:LoggingDebugî variable to $false
+    $Script:LoggingDebug‚Äù variable to $false
 
 The resultant log file will look something like this:
 
