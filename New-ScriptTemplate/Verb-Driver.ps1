@@ -20,23 +20,31 @@
  
  [CmdletBinding()]
     Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][string]$AParam
+        [Parameter(Mandatory=$true,ValueFromPipeline=$true)][string]$Word
  
     )
 
-#Load modules and related files
+# Load modules and related files
 try{ 
-    #DotSource the configfile
+    # Create a list of system Variables already in place before running the script,
+    # Will be used to clear any session variables
+    $SystemVars = Get-Variable | Where-Object{$_.Name}
+
+
+    # DotSource the configfile
     . ".\Config.ps1" 
 
-    #Logging:
-    #Load the logging module and set the login path so al the other scripts use it
+    ########
+    # Logging:
+    # Load the logging module and set the log path so all the other scripts use it
     . ".\Modules\Init-Logging.ps1"
     
-    #Initialize the log
+    # Initialize the log
     Log-Start -logpath $Script:LogPath
+    ########
 
-    #Load the other modules in the module folder (except the Logging module as that is already loaded)
+    # Load the other modules in the module folder (except the Logging module as that is already loaded)
+    ##############
     $Modules = Get-ChildItem ".\Modules\" | Where-Object {$_.name -ne "Init-Logging.ps1"}
     
     foreach ($Module in $Modules){  
@@ -45,6 +53,7 @@ try{
         . ".\Modules\$ModuleName"
     }
 
+    
 }catch{ 
 
     Log-Error -LogPath $Script:LogPath -ErrorDesc $_.Exception -ExitGracefully $True
@@ -61,7 +70,7 @@ try{
 
 
 
-    $MyVar = Test-function1 $Param
+    $MyVar = Test-function1 $Word
     Log-write -logpath $Script:LogPath -linevalue "Result:`t$MyVar"
     
 
@@ -71,15 +80,16 @@ try{
     #.....AND ENDS HERE #
     #####################
 
-    Log-Finish -LogPath $Script:LogPath #-NoExit $True
-    #Cleanup from any previous runs
-    Remove-Variable * -ErrorAction SilentlyContinue
+    Log-Finish -LogPath $Script:LogPath -NoExit $True
 
+    # Cleanup from any previous runs
+    Get-Variable | Where-Object { $SystemVars -notcontains $_.Name } | Where-Object { Remove-Variable -Name “$($_.Name)” -Force -Scope “global” -ErrorAction SilentlyContinue}
+    
 }catch{
 
     Log-Error -LogPath $Script:LogPath -ErrorDesc "$_.Exception" -ExitGracefully $True
 
-}#Try/Catch
+}# Try/Catch
 
-#Cleanup from any previous runs
-Remove-Variable * -ErrorAction SilentlyContinue
+# Cleanup from any previous runs
+Get-Variable | Where-Object { $SystemVars -notcontains $_.Name } | Where-Object { Remove-Variable -Name “$($_.Name)” -Force -Scope “global” -ErrorAction SilentlyContinue}
