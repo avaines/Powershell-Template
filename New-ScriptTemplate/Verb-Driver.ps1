@@ -29,7 +29,9 @@ try{
     # Create a list of system Variables already in place before running the script,
     # Will be used to clear any session variables
     $SystemVars = Get-Variable | Where-Object{$_.Name}
-
+    
+    # 'cd' to execution dir
+    Set-Location (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 
     # DotSource the configfile
     . ".\Config.ps1" 
