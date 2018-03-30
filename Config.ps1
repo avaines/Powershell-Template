@@ -14,6 +14,5 @@ $Script:LoggingDebug = $true
 
 # Set log path
 $Script:LogFolder = "Logs"
-$Script:LogPath = "$Script:LogFolder\Log-$(get-date -f yyyy-MM-dd).log"
 
 
