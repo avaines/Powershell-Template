@@ -42,7 +42,7 @@ try{
     . ".\Modules\Init-Logging.ps1"
     
     # Initialize the log
-    Log-Start -logpath $Script:LogPath
+    Start-Log
     ########
 
     # Load the other modules in the module folder (except the Logging module as that is already loaded)
@@ -51,14 +51,14 @@ try{
     
     foreach ($Module in $Modules){  
         $ModuleName = $Module.Name
-        Log-write -logpath $Script:LogPath -linevalue "Loading Module: $ModuleName"
+        Write-Log -linevalue "Loading Module: $ModuleName"
         . ".\Modules\$ModuleName"
     }
 
     
 }catch{ 
 
-    Log-Error -LogPath $Script:LogPath -ErrorDesc $_.Exception -ExitGracefully $True
+    Write-Error -ErrorDesc $_.Exception -ExitGracefully $True
 
 }
 
@@ -73,7 +73,7 @@ try{
 
 
     $MyVar = Test-function1 $Word
-    Log-write -logpath $Script:LogPath -linevalue "Result:`t$MyVar"
+     Write-Log -linevalue "Result:`t$MyVar"
     
 
 
@@ -81,17 +81,16 @@ try{
     #####################
     #.....AND ENDS HERE #
     #####################
-
-    Log-Finish -LogPath $Script:LogPath -NoExit $True
-
-    # Cleanup from any previous runs
-    Get-Variable | Where-Object { $SystemVars -notcontains $_.Name } | Where-Object { Remove-Variable -Name “$($_.Name)” -Force -Scope “global” -ErrorAction SilentlyContinue}
-    
+   
 }catch{
 
-    Log-Error -LogPath $Script:LogPath -ErrorDesc "$_.Exception" -ExitGracefully $True
+    Write-Error -ErrorDesc "$_.Exception" -ExitGracefully $True
 
-}# Try/Catch
-
-# Cleanup from any previous runs
-Get-Variable | Where-Object { $SystemVars -notcontains $_.Name } | Where-Object { Remove-Variable -Name “$($_.Name)” -Force -Scope “global” -ErrorAction SilentlyContinue}
+} finally {
+    
+    # Cleanup from any previous runs
+    Stop-Log -NoExit $True
+    
+    Get-Variable | Where-Object { $SystemVars -notcontains $_.Name } | Where-Object { Remove-Variable -Name “$($_.Name)” -Force -Scope “global” -ErrorAction SilentlyContinue}
+    
+} # Try/Catch
