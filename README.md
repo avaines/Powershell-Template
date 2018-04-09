@@ -35,7 +35,7 @@ The main script block is where the specific code for the project/tasks goes, thi
 
 When writing a main script block use the following structure to write messages to the log file.
 
-    Log-write -logpath $Script:LogPath -linevalue “A message”
+    write-log -linevalue “A message” -level "info"
 
 In it’s default state these messages will be written out to console as well as the file. This can be altered in the config file by changing the 
 
