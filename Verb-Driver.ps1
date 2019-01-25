@@ -49,11 +49,36 @@ try{
     ##############
     $Modules = Get-ChildItem ".\Modules\" | Where-Object {$_.name -ne "Init-Logging.ps1"}
     
-    foreach ($Module in $Modules){  
+    foreach ($Module in $ScriptModules){  
         $ModuleName = $Module.Name
         Write-Log -linevalue "Loading Module: $ModuleName"
         . ".\Modules\$ModuleName"
     }
+
+    #Import or attempt to install modules available from the public powershell gallery as specified in the config file
+    foreach($RequiredModule in $Script:RequiredModules) {
+        if(!(get-module -name $RequiredModules)){
+            $AvailableModules = Get-Module -ListAvailable | where { $_.name -eq $RequiredModules}
+            if($AvailableModules){
+                write-host "$RequiredModules found, attempting to import"
+                try{
+                    Import-Module $RequiredModules -ErrorAction SilentlyContinue
+                    write-Log -linevalue "$RequiredModules imported" -level "MODULES"                    
+                }catch{
+                    Write-Error -ErrorDesc $_.Exception -ExitGracefully $True
+                }
+            }else{
+                write-host "$RequiredModules not found, attempting to install"
+                try{
+                    #Requires -RunAsAdministrator
+                    Install-Module -Name ReportHTML
+                    write-Log -linevalue "$RequiredModules Installed" -level "MODULES"
+                }catch{
+                    Write-Error -ErrorDesc $_.Exception -ExitGracefully $True
+                }
+            }#end import
+        }#end if get modules
+    }#end foreach
 
     
 }catch{ 
