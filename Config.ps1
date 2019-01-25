@@ -15,4 +15,7 @@ $Script:LoggingDebug = $true
 # Set log path
 $Script:LogFolder = "Logs"
 
+#List of modules from the powershell gallery required
+$Script:RequiredModules = @()
+
 
