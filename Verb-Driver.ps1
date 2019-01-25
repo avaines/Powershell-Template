@@ -70,7 +70,6 @@ try{
             }else{
                 write-host "$RequiredModules not found, attempting to install"
                 try{
-                    #Requires -RunAsAdministrator
                     Install-Module -Name ReportHTML
                     write-Log -linevalue "$RequiredModules Installed" -level "MODULES"
                 }catch{
